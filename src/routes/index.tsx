@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { differenceInDays, format, parseISO } from "date-fns";
-import { ShieldAlert } from "lucide-react";
+import { ArrowUpRight, ShieldAlert } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { FileLink } from "@/components/vendor-ui";
 import { useStore } from "@/lib/vendor-store";
 import { deriveStage } from "@/lib/workflow";
@@ -9,6 +10,8 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Active Vendors — Vendor Review Desk" },
       { name: "description", content: "Dashboard of all active vendors with contract dates, renewal and cancellation terms, data sources and PHI/PII flags." },
       { property: "og:title", content: "Active Vendors — Vendor Review Desk" },
@@ -27,7 +30,7 @@ function Dashboard() {
   const awaiting = requests.filter((r) => deriveStage(r) === "awaiting_execution").length;
   const today = new Date();
   const soon = active.filter((r) => {
-    const d = differenceInDays(parseISO(r.execution!.endDate), today);
+    const d = differenceInDays(parseISO(r.execution?.endDate ?? ""), today);
     return d >= 0 && d <= 90;
   }).length;
   const phi = active.filter((r) => r.phiPii === "yes").length;
@@ -42,24 +45,24 @@ function Dashboard() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <p className="eyebrow">Executed contracts</p>
-        <h1 className="mt-1 text-5xl">Active vendors</h1>
+      <div className="page-heading">
+        <div><p className="eyebrow text-primary">Vendor Review Desk / Executed contracts</p><h1 className="page-title">Active vendors</h1></div>
+        <Button asChild><Link to="/requests/new">New vendor request <ArrowUpRight /></Link></Button>
       </div>
 
-      <div className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border bg-border md:grid-cols-5">
+      <div className="metric-strip">
         {stats.map((s) => (
-          <div key={s.label} className="bg-card p-5">
+          <div key={s.label} className="metric-item">
             <p className="eyebrow">{s.label}</p>
-            <p className="mt-2 font-display text-4xl">{s.value}</p>
+            <p className="metric-value">{s.value}</p>
             {s.to && s.value > 0 && <Link to="/requests" className="text-xs text-primary underline-offset-2 hover:underline">View pipeline →</Link>}
           </div>
         ))}
       </div>
 
-      <div className="overflow-x-auto rounded-lg border bg-card shadow-card">
+      <div className="vendor-table">
         <table className="w-full min-w-[1200px] text-sm">
-          <thead className="border-b bg-muted/60 text-left">
+          <thead className="border-b text-left">
             <tr>
               {["Vendor & use case", "Requesting team", "Portfolio company", "Executed", "Ends", "Renewal terms", "Cancellation terms", "Data source(s)", "PHI / PII", "Contract"].map((h) => (
                 <th key={h} className="px-4 py-3 eyebrow font-normal">{h}</th>
@@ -68,7 +71,8 @@ function Dashboard() {
           </thead>
           <tbody className="divide-y">
             {active.map((r) => {
-              const e = r.execution!;
+              const e = r.execution;
+              if (!e) return null;
               const days = differenceInDays(parseISO(e.endDate), today);
               return (
                 <tr key={r.id} className="align-top hover:bg-muted/40">
