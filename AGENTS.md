@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Vendor workflow state lives in src/lib/vendor-store.ts (browser localStorage) with pure rules in src/lib/workflow.ts — demo has no backend yet; swap the store for Lovable Cloud when going multi-user.
