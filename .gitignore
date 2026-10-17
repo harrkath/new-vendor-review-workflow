@@ -30,3 +30,14 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local environment (backend URL + publishable key only — never commit)
+.env
+.env.*
+!.env.example
+
+# TypeScript incremental build info
+tsconfig.tsbuildinfo
+
+# Editor/sandbox workspace state
+.workspace/
