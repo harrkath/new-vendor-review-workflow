@@ -27,7 +27,7 @@ export interface FileRef {
   /** Inline data URL — only on legacy/sample files without an uploaded copy. */
   dataUrl?: string;
   /** Storage path in the private "contracts" bucket for uploaded files. */
-  path?: string;
+  path?: string | undefined;
 }
 
 export interface Message {
@@ -54,11 +54,11 @@ export interface VendorRequest {
   portfolioCompany: string;
   dataSources: string;
   phiPii: "yes" | "no" | "na";
-  contractFile?: FileRef;
+  contractFile?: FileRef | undefined;
   submittedAt: string;
   reviews: Record<LeadRole, { status: ReviewStatus; updatedAt?: string }>;
   messages: Message[];
-  execution?: Execution;
+  execution?: Execution | undefined;
 }
 
 export interface Notice {

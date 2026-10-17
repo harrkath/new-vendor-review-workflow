@@ -24,7 +24,7 @@ const statusTone: Record<ReviewStatus, string> = {
 };
 const stageTone: Record<Stage, string> = {
   in_review: statusTone.pending,
-  awaiting_execution: "bg-accent/25 text-accent-foreground border-accent/60",
+  awaiting_execution: "bg-primary/10 text-primary border-primary/40",
   active: statusTone.approved,
   rejected: statusTone.rejected,
 };
