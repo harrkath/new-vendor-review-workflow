@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { differenceInDays, format, parseISO } from "date-fns";
-import { Download, ShieldAlert } from "lucide-react";
+import { ShieldAlert } from "lucide-react";
+import { FileLink } from "@/components/vendor-ui";
 import { useStore } from "@/lib/vendor-store";
 import { deriveStage } from "@/lib/workflow";
 import { cn } from "@/lib/utils";
@@ -93,9 +94,7 @@ function Dashboard() {
                     </span>
                   </td>
                   <td className="px-4 py-4">
-                    {e.executedFile.dataUrl ? (
-                      <a href={e.executedFile.dataUrl} download={e.executedFile.name} className="inline-flex items-center gap-1 text-primary hover:underline"><Download className="size-3.5" />Executed copy</a>
-                    ) : <span className="text-xs text-muted-foreground">{e.executedFile.name}</span>}
+                    <FileLink file={e.executedFile} label="Executed copy" />
                   </td>
                 </tr>
               );

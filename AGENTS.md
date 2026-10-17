@@ -9,4 +9,4 @@
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
 
-- Vendor workflow state lives in src/lib/vendor-store.ts (browser localStorage) with pure rules in src/lib/workflow.ts — demo has no backend yet; swap the store for Lovable Cloud when going multi-user.
+- Vendor workflow state lives in Lovable Cloud: public tables `vendor_requests` / `request_messages` / `notices` plus the private `contracts` storage bucket, synced client-side in src/lib/vendor-store.ts (realtime + 30s backstop refresh; pure rules stay in src/lib/workflow.ts). Demo has no login — anon RLS policies allow anyone with the URL to read and write; add auth before real use.

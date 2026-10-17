@@ -1,8 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Paperclip } from "lucide-react";
 import { useState, type ReactNode } from "react";
-import { actions, readFile } from "@/lib/vendor-store";
-import { LEAD_ROLES, ROLE_LABEL, TEAMS, type FileRef } from "@/lib/workflow";
+import { actions } from "@/lib/vendor-store";
+import { LEAD_ROLES, ROLE_LABEL, TEAMS } from "@/lib/workflow";
 
 export const Route = createFileRoute("/requests/new")({
   head: () => ({
@@ -30,16 +30,23 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
 function NewRequest() {
   const nav = useNavigate();
   const [f, setF] = useState({ vendorName: "", useCase: "", team: "Investment pod", portfolioCompany: "", dataSources: "", phiPii: "no" as "yes" | "no" | "na" });
-  const [file, setFile] = useState<FileRef>();
+  const [file, setFile] = useState<File>();
+  const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
   const up = (k: keyof typeof f) => (e: { target: { value: string } }) => setF({ ...f, [k]: e.target.value });
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!f.vendorName.trim() || !f.useCase.trim()) return setErr("Vendor name and use case are required.");
     if (!file) return setErr("Please attach the vendor contract template.");
-    const id = actions.submit({ ...f, contractFile: file });
-    nav({ to: "/requests/$id", params: { id } });
+    setBusy(true);
+    setErr("");
+    try {
+      const id = await actions.submit({ ...f, contractFile: file });
+      nav({ to: "/requests/$id", params: { id } });
+    } catch {
+      setBusy(false);
+    }
   };
 
   return (
@@ -73,11 +80,13 @@ function NewRequest() {
         <Field label="Vendor contract template">
           <div className="flex items-center gap-3 rounded-md border border-dashed border-input bg-muted/40 p-4">
             <Paperclip className="size-4 text-muted-foreground" />
-            <input type="file" accept=".pdf,.doc,.docx" className="text-sm" onChange={async (e) => { const fl = e.target.files?.[0]; if (fl) setFile(await readFile(fl)); }} />
+            <input type="file" accept=".pdf,.doc,.docx" className="text-sm" onChange={(e) => { const fl = e.target.files?.[0]; if (fl) setFile(fl); }} />
           </div>
         </Field>
         {err && <p className="text-sm text-destructive">{err}</p>}
-        <button className="rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90">Submit for review</button>
+        <button disabled={busy} className="rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-60">
+          {busy ? "Submitting…" : "Submit for review"}
+        </button>
       </form>
       <aside className="space-y-4">
         <p className="eyebrow">On submit, these leads are notified at once</p>

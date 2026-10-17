@@ -1,12 +1,13 @@
 import { Link } from "@tanstack/react-router";
-import { Bell, Check, Circle, FileSignature, Send, X } from "lucide-react";
+import { Bell, Check, Circle, Download, FileSignature, Send, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { actions, useStore } from "@/lib/vendor-store";
+import { actions, downloadFile, useStore } from "@/lib/vendor-store";
 import {
   deriveStage,
   LEAD_ROLES,
   ROLE_LABEL,
   STAGE_LABEL,
+  type FileRef,
   type ReviewStatus,
   type Role,
   type Stage,
@@ -38,6 +39,16 @@ export function StatusPill({ status }: { status: ReviewStatus }) {
 
 export function StagePill({ stage }: { stage: Stage }) {
   return <span className={cn("inline-flex rounded-full border px-2 py-0.5 text-xs font-medium", stageTone[stage])}>{STAGE_LABEL[stage]}</span>;
+}
+
+/** Download link for an attachment: direct data URL, storage-backed, or name-only (sample data). */
+export function FileLink({ file, label }: { file: FileRef; label?: string }) {
+  const cls = "inline-flex items-center gap-1 text-primary hover:underline";
+  if (file.dataUrl)
+    return <a className={cls} href={file.dataUrl} download={file.name}><Download className="size-3.5" />{label ?? file.name}</a>;
+  if (file.path)
+    return <button className={cls} onClick={() => void downloadFile(file.path!)}><Download className="size-3.5" />{label ?? file.name}</button>;
+  return <span className="text-xs text-muted-foreground">{file.name}</span>;
 }
 
 /** Horizontal track: Submitted → four lead reviews → Execution → Active */

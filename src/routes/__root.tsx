@@ -9,6 +9,7 @@ import {
   type ErrorComponentProps,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import { Toaster } from "@/components/ui/sonner";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -96,6 +97,7 @@ function RootComponent() {
   useEffect(() => loadStore(), []);
   return (
     <QueryClientProvider client={queryClient}>
+      <Toaster />
       <header className="bg-ink text-ink-foreground">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-6 px-6 py-3">
           <Link to="/" className="font-display text-2xl">Vendor Review Desk</Link>

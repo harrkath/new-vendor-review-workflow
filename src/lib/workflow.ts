@@ -24,7 +24,10 @@ export const TEAMS = ["Investment pod", "Portfolio pod", "Operations", "Finance"
 
 export interface FileRef {
   name: string;
-  dataUrl: string;
+  /** Inline data URL — only on legacy/sample files without an uploaded copy. */
+  dataUrl?: string;
+  /** Storage path in the private "contracts" bucket for uploaded files. */
+  path?: string;
 }
 
 export interface Message {
