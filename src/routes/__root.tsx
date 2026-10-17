@@ -66,7 +66,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif&family=Work+Sans:wght@400;500;600&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;500;600;700&display=swap" },
     ],
   }),
   shellComponent: RootShell,
@@ -89,8 +89,8 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
-const navCls = "rounded-md px-3 py-1.5 text-sm text-ink-foreground/75 hover:text-ink-foreground";
-const activeNav = { className: "rounded-md px-3 py-1.5 text-sm bg-sidebar-accent text-ink-foreground" };
+const navCls = "app-nav-link";
+const activeNav = { className: "app-nav-link app-nav-active" };
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
@@ -98,21 +98,21 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <Toaster />
-      <header className="bg-ink text-ink-foreground">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-6 px-6 py-3">
-          <Link to="/" className="font-display text-2xl">Vendor Review Desk</Link>
-          <nav className="flex gap-1">
+      <header className="app-header bg-ink text-ink-foreground">
+        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-x-8 gap-y-3 px-5 pb-0 pt-6 sm:px-8 lg:px-12">
+          <Link to="/" className="flex items-center gap-4 py-2" aria-label="Deerfield Vendor Review Desk">
+            <span className="brand-wordmark">DEERFIELD</span>
+            <span className="hidden border-l border-border pl-4 text-xs text-muted-foreground sm:block">Vendor Review Desk</span>
+          </Link>
+          <div className="flex items-center gap-3"><RoleSwitcher /><NotificationBell /></div>
+          <nav className="flex w-full gap-6 overflow-x-auto" aria-label="Main navigation">
             <Link to="/" className={navCls} activeProps={activeNav} activeOptions={{ exact: true }}>Vendor dashboard</Link>
             <Link to="/requests" className={navCls} activeProps={activeNav} activeOptions={{ exact: true }}>Review pipeline</Link>
             <Link to="/requests/new" className={navCls} activeProps={activeNav}>New request</Link>
           </nav>
-          <div className="ml-auto flex items-center gap-3">
-            <RoleSwitcher />
-            <NotificationBell />
-          </div>
         </div>
       </header>
-      <main className="mx-auto max-w-7xl px-6 py-10">
+      <main className="mx-auto max-w-[1440px] px-5 py-10 sm:px-8 lg:px-12 lg:py-12">
         <Outlet />
       </main>
     </QueryClientProvider>

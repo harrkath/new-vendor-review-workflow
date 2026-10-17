@@ -1,12 +1,15 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Paperclip } from "lucide-react";
+import { ArrowUpRight, Paperclip, Users } from "lucide-react";
 import { useState, type ReactNode } from "react";
+import { Button } from "@/components/ui/button";
 import { actions } from "@/lib/vendor-store";
 import { LEAD_ROLES, ROLE_LABEL, TEAMS } from "@/lib/workflow";
 
 export const Route = createFileRoute("/requests/new")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "New Vendor Request — Vendor Review Desk" },
       { name: "description", content: "Submit a new vendor for cross-functional review by Ops, Finance, Compliance and IT." },
       { property: "og:title", content: "New Vendor Request — Vendor Review Desk" },
@@ -51,11 +54,8 @@ function NewRequest() {
 
   return (
     <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
-      <form onSubmit={submit} className="space-y-6 rounded-lg border bg-card p-8 shadow-card">
-        <div>
-          <p className="eyebrow">Step 1 of 4 · Submission</p>
-          <h1 className="mt-1 text-4xl">New vendor request</h1>
-        </div>
+      <form onSubmit={submit} className="min-w-0 space-y-7">
+        <div className="page-heading"><div><p className="eyebrow text-primary">Step 1 of 4 · Submission</p><h1 className="page-title">New vendor request</h1></div></div>
         <Field label="Vendor name"><input className={input} value={f.vendorName} onChange={up("vendorName")} maxLength={120} /></Field>
         <Field label="Use case" hint="— brief description"><textarea className={input} rows={3} value={f.useCase} onChange={up("useCase")} maxLength={600} /></Field>
         <div className="grid gap-6 sm:grid-cols-2">
@@ -69,7 +69,7 @@ function NewRequest() {
         </Field>
         <fieldset className="space-y-2">
           <legend className="text-sm font-medium">Does data provided via the tool contain PHI / PII?</legend>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             {([["yes", "Yes"], ["no", "No"], ["na", "Not applicable"]] as const).map(([v, l]) => (
               <label key={v} className={`cursor-pointer rounded-md border px-4 py-2 text-sm ${f.phiPii === v ? "border-primary bg-primary text-primary-foreground" : "bg-card hover:bg-muted"}`}>
                 <input type="radio" className="sr-only" checked={f.phiPii === v} onChange={() => setF({ ...f, phiPii: v })} />{l}
@@ -84,14 +84,14 @@ function NewRequest() {
           </div>
         </Field>
         {err && <p className="text-sm text-destructive">{err}</p>}
-        <button disabled={busy} className="rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-60">
-          {busy ? "Submitting…" : "Submit for review"}
-        </button>
+        <Button type="submit" disabled={busy} size="lg">
+          {busy ? "Submitting…" : "Submit for review"}<ArrowUpRight />
+        </Button>
       </form>
-      <aside className="space-y-4">
-        <p className="eyebrow">On submit, these leads are notified at once</p>
+      <aside className="space-y-4 border-t border-border pt-6 lg:mt-28 lg:border-l lg:border-t-0 lg:pl-8">
+        <p className="eyebrow">Review team</p>
         <ul className="space-y-2">
-          {LEAD_ROLES.map((l) => <li key={l} className="rounded-md border bg-card px-4 py-3 text-sm">{ROLE_LABEL[l]}</li>)}
+          {LEAD_ROLES.map((l) => <li key={l} className="flex items-center gap-3 border-b py-4 text-sm"><Users className="size-4 text-primary" />{ROLE_LABEL[l]}</li>)}
         </ul>
         <p className="text-sm text-muted-foreground">A dedicated Q&A channel opens for the leads and you. Once all four approve, the contract goes to the Ops lead for execution.</p>
       </aside>

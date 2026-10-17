@@ -13,6 +13,7 @@ import {
   type Stage,
   type VendorRequest,
 } from "@/lib/workflow";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 
@@ -46,8 +47,9 @@ export function FileLink({ file, label }: { file: FileRef; label?: string }) {
   const cls = "inline-flex items-center gap-1 text-primary hover:underline";
   if (file.dataUrl)
     return <a className={cls} href={file.dataUrl} download={file.name}><Download className="size-3.5" />{label ?? file.name}</a>;
-  if (file.path)
-    return <button className={cls} onClick={() => void downloadFile(file.path!)}><Download className="size-3.5" />{label ?? file.name}</button>;
+  const path = file.path;
+  if (path)
+    return <Button variant="link" className="h-auto justify-start whitespace-normal p-0 text-left" onClick={() => void downloadFile(path)}><Download className="size-3.5" />{label ?? file.name}</Button>;
   return <span className="text-xs text-muted-foreground">{file.name}</span>;
 }
 
@@ -64,7 +66,7 @@ export function WorkflowTrack({ r, compact = false }: { r: VendorRequest; compac
   const line = (done: boolean) => cn("h-0.5 flex-1", done ? "bg-approved" : "bg-border");
   const reviewsDone = stage === "awaiting_execution" || stage === "active";
   return (
-    <div className="flex items-center gap-2">
+    <div className={cn("flex items-center gap-2", !compact && "min-w-[440px]")}>
       <div className="flex flex-col items-center gap-1">
         <div className={node(true)}><Send className={icon} /></div>
         {!compact && <span className="eyebrow">Submitted</span>}
@@ -101,11 +103,11 @@ export function RoleSwitcher() {
   const role = useStore((s) => s.role);
   return (
     <label className="flex items-center gap-2 text-sm">
-      <span className="eyebrow text-ink-foreground/60">Viewing as</span>
+      <span className="hidden text-xs text-muted-foreground sm:inline">Viewing as</span>
       <select
         value={role}
         onChange={(e) => actions.setRole(e.target.value as Role)}
-        className="rounded-md border border-sidebar-border bg-sidebar-accent px-2 py-1.5 text-sm text-ink-foreground"
+        className="max-w-[170px] rounded-md border border-sidebar-border bg-background px-3 py-2 text-sm text-ink-foreground"
       >
         {ROLES.map((r) => <option key={r} value={r}>{ROLE_LABEL[r]}</option>)}
       </select>
@@ -126,16 +128,16 @@ export function NotificationBell() {
   }, []);
   return (
     <div className="relative" ref={ref}>
-      <button
-        aria-label="Notifications"
+      <Button variant="ghost" size="icon"
+        aria-label="Notifications" title="Notifications"
         onClick={() => { setOpen(!open); if (!open) actions.markSeen(); }}
         className="relative rounded-md p-2 text-ink-foreground hover:bg-sidebar-accent"
       >
         <Bell className="size-5" />
         {unread > 0 && <span className="absolute -right-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-accent-foreground">{unread}</span>}
-      </button>
+      </Button>
       {open && (
-        <div className="absolute right-0 z-50 mt-2 w-96 overflow-hidden rounded-lg border bg-popover text-popover-foreground shadow-card">
+        <div className="absolute right-0 z-50 mt-2 w-[min(24rem,calc(100vw-2.5rem))] overflow-hidden rounded-lg border bg-popover text-popover-foreground shadow-card">
           <div className="border-b px-4 py-2.5 eyebrow">Group notifications</div>
           <ul className="max-h-96 divide-y overflow-auto">
             {notices.slice(0, 25).map((n) => (
