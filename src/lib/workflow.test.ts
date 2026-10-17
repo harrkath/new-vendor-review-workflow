@@ -13,7 +13,7 @@ describe("vendor review workflow", () => {
 
   it("status update notifies the group with lead and vendor name", () => {
     const { notices } = applyReview(base(), "finance", "approved");
-    expect(notices[0].text).toBe("Finance lead approved the XYZ vendor contract");
+    expect(notices[0]?.text).toBe("Finance lead approved the XYZ vendor contract");
   });
 
   it("sends to Ops for execution only once all four leads approve", () => {

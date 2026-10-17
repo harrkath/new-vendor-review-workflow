@@ -29,7 +29,7 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
 
 function NewRequest() {
   const nav = useNavigate();
-  const [f, setF] = useState({ vendorName: "", useCase: "", team: TEAMS[0], portfolioCompany: "", dataSources: "", phiPii: "no" as "yes" | "no" | "na" });
+  const [f, setF] = useState({ vendorName: "", useCase: "", team: "Investment pod", portfolioCompany: "", dataSources: "", phiPii: "no" as "yes" | "no" | "na" });
   const [file, setFile] = useState<FileRef>();
   const [err, setErr] = useState("");
   const up = (k: keyof typeof f) => (e: { target: { value: string } }) => setF({ ...f, [k]: e.target.value });

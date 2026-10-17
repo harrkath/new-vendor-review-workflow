@@ -66,7 +66,7 @@ export function WorkflowTrack({ r, compact = false }: { r: VendorRequest; compac
             return (
               <div key={l} className="flex flex-col items-center gap-1" title={`${ROLE_LABEL[l]}: ${s}`}>
                 <div className={node(s === "approved", s === "rejected")}>
-                  {s === "approved" ? <Check className={icon} /> : s === "rejected" ? <X className={icon} /> : <span className="text-[10px] font-semibold">{l === "it" ? "IT" : l[0].toUpperCase()}</span>}
+                  {s === "approved" ? <Check className={icon} /> : s === "rejected" ? <X className={icon} /> : <span className="text-[10px] font-semibold">{l === "it" ? "IT" : l.charAt(0).toUpperCase()}</span>}
                 </div>
                 {!compact && <span className="text-[10px] text-muted-foreground">{ROLE_LABEL[l].replace(" lead", "")}</span>}
               </div>
