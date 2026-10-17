@@ -1,12 +1,13 @@
 import { Link } from "@tanstack/react-router";
-import { Bell, Check, Circle, FileSignature, Send, X } from "lucide-react";
+import { Bell, Check, Circle, Download, FileSignature, Send, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { actions, useStore } from "@/lib/vendor-store";
+import { actions, downloadFile, useStore } from "@/lib/vendor-store";
 import {
   deriveStage,
   LEAD_ROLES,
   ROLE_LABEL,
   STAGE_LABEL,
+  type FileRef,
   type ReviewStatus,
   type Role,
   type Stage,
