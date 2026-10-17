@@ -14,7 +14,115 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      notices: {
+        Row: {
+          at: string
+          id: string
+          request_id: string | null
+          text: string
+        }
+        Insert: {
+          at?: string
+          id?: string
+          request_id?: string | null
+          text: string
+        }
+        Update: {
+          at?: string
+          id?: string
+          request_id?: string | null
+          text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notices_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "vendor_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      request_messages: {
+        Row: {
+          at: string
+          id: string
+          request_id: string
+          role: string
+          text: string
+        }
+        Insert: {
+          at?: string
+          id?: string
+          request_id: string
+          role: string
+          text: string
+        }
+        Update: {
+          at?: string
+          id?: string
+          request_id?: string
+          role?: string
+          text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "request_messages_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "vendor_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendor_requests: {
+        Row: {
+          contract_file_name: string | null
+          contract_file_path: string | null
+          created_at: string
+          data_sources: string
+          execution: Json | null
+          id: string
+          phi_pii: string
+          portfolio_company: string
+          reviews: Json
+          submitted_at: string
+          team: string
+          use_case: string
+          vendor_name: string
+        }
+        Insert: {
+          contract_file_name?: string | null
+          contract_file_path?: string | null
+          created_at?: string
+          data_sources?: string
+          execution?: Json | null
+          id: string
+          phi_pii?: string
+          portfolio_company?: string
+          reviews?: Json
+          submitted_at?: string
+          team?: string
+          use_case?: string
+          vendor_name: string
+        }
+        Update: {
+          contract_file_name?: string | null
+          contract_file_path?: string | null
+          created_at?: string
+          data_sources?: string
+          execution?: Json | null
+          id?: string
+          phi_pii?: string
+          portfolio_company?: string
+          reviews?: Json
+          submitted_at?: string
+          team?: string
+          use_case?: string
+          vendor_name?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
