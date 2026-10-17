@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { format, formatDistanceToNow } from "date-fns";
-import { Download, FileSignature, Send } from "lucide-react";
+import { FileSignature, Send } from "lucide-react";
 import { useState } from "react";
-import { StagePill, StatusPill, WorkflowTrack } from "@/components/vendor-ui";
-import { actions, readFile, useStore } from "@/lib/vendor-store";
-import { deriveStage, LEAD_ROLES, ROLE_LABEL, type FileRef, type LeadRole, type ReviewStatus, type VendorRequest } from "@/lib/workflow";
+import { FileLink, StagePill, StatusPill, WorkflowTrack } from "@/components/vendor-ui";
+import { actions, useStore } from "@/lib/vendor-store";
+import { deriveStage, LEAD_ROLES, ROLE_LABEL, type LeadRole, type ReviewStatus, type VendorRequest } from "@/lib/workflow";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/requests/$id")({
@@ -66,15 +66,13 @@ function Details({ r }: { r: VendorRequest }) {
         <Row k="Portfolio company" v={r.portfolioCompany} />
         <Row k="Data source(s)" v={r.dataSources} />
         <Row k="PHI / PII" v={r.phiPii === "yes" ? "Yes" : r.phiPii === "no" ? "No" : "Not applicable"} />
-        <Row k="Contract template" v={r.contractFile && (r.contractFile.dataUrl
-          ? <a className="inline-flex items-center gap-1 text-primary hover:underline" href={r.contractFile.dataUrl} download={r.contractFile.name}><Download className="size-3.5" />{r.contractFile.name}</a>
-          : r.contractFile.name)} />
+        <Row k="Contract template" v={r.contractFile && <FileLink file={r.contractFile} />} />
         {e && <>
           <Row k="Executed" v={e.executionDate} />
           <Row k="End date" v={e.endDate} />
           <Row k="Renewal terms" v={e.renewalTerms} />
           <Row k="Cancellation terms" v={e.cancellationTerms} />
-          <Row k="Executed copy" v={e.executedFile.dataUrl ? <a className="text-primary hover:underline" href={e.executedFile.dataUrl} download={e.executedFile.name}>{e.executedFile.name}</a> : e.executedFile.name} />
+          <Row k="Executed copy" v={<FileLink file={e.executedFile} />} />
         </>}
       </dl>
     </section>
@@ -156,7 +154,7 @@ function Chat({ r, role }: { r: VendorRequest; role: "requester" | LeadRole }) {
 
 function ExecutionPanel({ r, canSign }: { r: VendorRequest; canSign: boolean }) {
   const [f, setF] = useState({ executionDate: "", endDate: "", renewalTerms: "", cancellationTerms: "" });
-  const [file, setFile] = useState<FileRef>();
+  const [file, setFile] = useState<File>();
   const [err, setErr] = useState("");
   const cls = "w-full rounded-md border border-input bg-card px-3 py-2 text-sm";
   const submit = (e: React.FormEvent) => {
@@ -176,7 +174,7 @@ function ExecutionPanel({ r, canSign }: { r: VendorRequest; canSign: boolean }) 
           <label className="space-y-1 text-sm">Renewal terms<input className={cls} value={f.renewalTerms} onChange={(e) => setF({ ...f, renewalTerms: e.target.value })} placeholder="e.g. Auto-renews annually" /></label>
           <label className="space-y-1 text-sm">Cancellation terms<input className={cls} value={f.cancellationTerms} onChange={(e) => setF({ ...f, cancellationTerms: e.target.value })} placeholder="e.g. 60 days notice" /></label>
           <label className="space-y-1 text-sm sm:col-span-2">Signed contract (executed copy)
-            <input type="file" accept=".pdf,.doc,.docx" className="block text-sm" onChange={async (e) => { const fl = e.target.files?.[0]; if (fl) setFile(await readFile(fl)); }} />
+            <input type="file" accept=".pdf,.doc,.docx" className="block text-sm" onChange={(e) => { const fl = e.target.files?.[0]; if (fl) setFile(fl); }} />
           </label>
           {err && <p className="text-sm text-destructive sm:col-span-2">{err}</p>}
           <div className="sm:col-span-2"><button className="rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90">Mark executed & add to dashboard</button></div>
