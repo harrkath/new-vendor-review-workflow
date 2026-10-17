@@ -1,0 +1,3 @@
+- [ ] Apply Deerfield-inspired colors, typography and navigation across the app.
+- [ ] Refine dashboard, pipeline, request form and request details without changing workflow behavior.
+- [ ] Verify page navigation, controls and narrow-screen formatting.
