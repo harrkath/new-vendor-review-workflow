@@ -1,3 +1,14 @@
+# Deerfield Intelligence | Director of Operations Case Study
+
+**Katie Harrington**
+
+The written deliverables (Operational Gap Assessment, 90-Day Operational Plan,
+and Cross-Functional Coordination Model) are in the PDF titled 'Deerfield Intelligence | Director of Operations - Case Study'.
+
+The prototype tool, a vendor review workflow supporting gap #6 and the Finance / Procurement initiatives in the 90-day plan, is documented below.
+
+---
+
 # Deerfield Vendor Review Desk
 
 A cross-functional workflow for reviewing new vendor contracts, built so Ops, Finance, Compliance and IT
